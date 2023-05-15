@@ -152,7 +152,7 @@ int main() {
             } 
             auto end = chrono::system_clock::now();
             auto cost = chrono::duration_cast<chrono::milliseconds>(end - begin);
-            // cout << type_info << " quickSort costs " << cost.count() << " ms." << endl;
+            cout << type_info << " quickSort costs " << cost.count() << " ms." << endl;
             for(auto e : array) {
                 fout << e << " ";
             }
