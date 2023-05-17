@@ -94,6 +94,7 @@ int main() {
         }); // 对读入数据按照x轴坐标排序，便于之后划分
         Result res = closest_pair(arr, 0, arr.size() - 1);
         printf("距离最近点对的编号为：%d和%d，距离为：%lf", res.p1.idx, res.p2.idx, res.dist);
+        fin.close();
     }
     
     return 0;
