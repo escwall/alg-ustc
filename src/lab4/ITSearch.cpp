@@ -186,12 +186,14 @@ public:
     TNode* search(TNode* i) {
         auto x = root;
         while(x != nullptr && !overleap(x, i)) {
-            if(x->left->max < i->key.low) {
+            if(x->left && x->left->max < i->key.low) {
                 x = x->right;
             }
-            else {
+            else if(x->right && x->right->key.low > i->max){
                 x = x->left;
             }
+            else 
+                x = nullptr;
         }
         return x;
     }
