@@ -9,8 +9,8 @@ void print(const vector<vector<int>>& s, int i, int j) {
     }
     else {
         cout << "(";
-        print(s, i, s[i][j]-1);
-        print(s, s[i][j], j);
+        print(s, i, s[i][j]);
+        print(s, s[i][j]+1, j);
         cout << ")";
     }
 }
@@ -33,7 +33,7 @@ int main() {
                 int cost = dp[i][j] + dp[j+1][k] + p[i] * p[j+1] * p[k+1];
                 if(cost < dp[i][k]) {
                     dp[i][k] = cost;
-                    s[i][k] = j+1;
+                    s[i][k] = j;
                 }
             } 
         }
