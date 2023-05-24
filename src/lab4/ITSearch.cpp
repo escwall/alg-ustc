@@ -41,7 +41,7 @@ using TNode = struct TNode
 
 class IntervalTree {
 private:
-    TNode* root;
+    
 
     void leftRotation(TNode* x) {
         TNode* y = x->right;
@@ -156,6 +156,7 @@ private:
     }
 
 public:
+    TNode* root;
     IntervalTree() : root(nullptr) {
         
     }
@@ -186,16 +187,23 @@ public:
     TNode* search(TNode* i) {
         auto x = root;
         while(x != nullptr && !overleap(x, i)) {
-            if(x->left && x->left->max < i->key.low) {
-                x = x->right;
-            }
-            else if(x->right && x->right->key.low > i->max){
+            if(x->left && x->left->max >= i->key.low) {
                 x = x->left;
+            }
+            else if(x->right && x->right->key.low <= i->max){
+                x = x->right;
             }
             else 
                 x = nullptr;
         }
         return x;
+    }
+
+    void midR(TNode* root) {
+        if(root == nullptr) return;
+        midR(root->left);
+        cout << root->max << " ";
+        midR(root->right);
     }
 };
 
@@ -214,6 +222,7 @@ int main() {
             fin >> low >> high;
             it->insert(interval(low, high));
         }
+        // it->midR(it->root);
         int low, high;
         cout << "请输入待查找区间: [low, high]" << endl;
         cin >> low >> high;
