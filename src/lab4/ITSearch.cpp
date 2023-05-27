@@ -60,6 +60,8 @@ private:
             x->parent->right = y;
         y->left = x;
         x->parent = y;
+        maxFixup(x);
+        maxFixup(y);
     }
 
     void rightRotation(TNode* x) {
@@ -79,6 +81,8 @@ private:
             x->parent->right = y;
         y->right = x;
         x->parent = y;
+        maxFixup(x);
+        maxFixup(y);
     }
 
     void insertFixup(TNode* z) {
@@ -181,7 +185,21 @@ public:
             y->left = z;
         else 
             y->right = z;
+        maxFixup(y);
         insertFixup(z);
+    }
+
+    void maxFixup(TNode* root) {
+        if(!root) return;
+        auto left = root->left;
+        auto right = root->right;
+        int lM, rM;
+        lM = rM = INT_MIN;
+        if(left) lM = left->max;
+        if(right) rM = right->max;
+        int m = lM > rM ? lM : rM;
+        m = m > root->key.high ? m : root->key.high;
+        root->max = m;
     }
 
     TNode* search(TNode* i) {
