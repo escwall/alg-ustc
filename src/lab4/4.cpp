@@ -4,22 +4,22 @@
 #include<fstream>
 using namespace std;
 
-struct Node
+struct Node //树结点
 {
 	int low;//低端点 
 	int high;//高端点 
-	int max;
+	int max;//以当前结点为根的子树中所有区间端点的最大值
 	string color;//颜色 
 	Node *pParent;//父结点 
 	Node *pLeft;//左孩子 
 	Node *pRight;//右孩子 
 };
  
-class RBT
+class IntervalTree //区间树类
 {
 public:
-	RBT();
-	~RBT();
+	IntervalTree();
+	~IntervalTree();
 	void LeftRotate(Node* px);//左旋
 	void RightRotate(Node* px);//右旋
 	void Insert(Node* pz);//插入
@@ -33,20 +33,20 @@ private:
 	Node* pT_root;
 };
  
-RBT::RBT()
+IntervalTree::IntervalTree()
 {//构造一棵区间树 
 	pT_nil = new Node; 
 	pT_nil->color = "Black";//颜色设为BLACK 
 	pT_nil->max = 0;
 	pT_root = pT_nil;
 }
-RBT::~RBT()
+IntervalTree::~IntervalTree()
 {
 	if( pT_nil != NULL )
 		delete pT_nil;
 }
  
-void RBT::LeftRotate(Node *px)
+void IntervalTree::LeftRotate(Node *px)
 {//左旋 
 	Node* py = px->pRight;//用py记录px的右孩子 
 	px->pRight = py->pLeft;//px的右孩子是py的左孩子 
@@ -63,7 +63,7 @@ void RBT::LeftRotate(Node *px)
 	py->max = max( py->high,max(py->pLeft->max,py->pRight->max) );
 	px->max = max( px->high,max(px->pLeft->max,px->pRight->max) );
 }
-void RBT::RightRotate(Node *py)
+void IntervalTree::RightRotate(Node *py)
 {//右旋 
 	Node* px = py->pLeft;
 	py->pLeft = px->pRight;
@@ -81,7 +81,7 @@ void RBT::RightRotate(Node *py)
 	px->max = max( px->high,max(px->pLeft->max,px->pRight->max) );
 }
  
-void RBT::Insert( Node* pz)
+void IntervalTree::Insert( Node* pz)
 {//插入 
 	pz->max = pz->high;
 	Node* py = pT_nil;
@@ -108,7 +108,7 @@ void RBT::Insert( Node* pz)
 	InsertFixUp( pz );
 }
  
-void RBT::InsertFixUp(Node* pz)
+void IntervalTree::InsertFixUp(Node* pz)
 {//插入修正 
 	Node* py = NULL;
 	while( "Red" == pz->pParent->color )
@@ -160,7 +160,7 @@ void RBT::InsertFixUp(Node* pz)
 	}
 	pT_root->color = "Black";
 }
-void RBT::InorderTreeWalk( Node* px )
+void IntervalTree::InorderTreeWalk( Node* px )
 {//中序遍历 
 	if( px != pT_nil )
 	{
@@ -169,7 +169,7 @@ void RBT::InorderTreeWalk( Node* px )
 		InorderTreeWalk( px->pRight );
 	}
 }
-Node* RBT::IntervalSearch( Node* i)
+Node* IntervalTree::IntervalSearch( Node* i)
 {//区间树查找 
 	Node* x = pT_root; //查找与i重叠的区间x的过程从以x为根的树根开始  
 	while( x != pT_nil && ( x->high < i->low || i->high < x->low ) )
@@ -183,7 +183,7 @@ Node* RBT::IntervalSearch( Node* i)
 }
 int main()
 {
-	RBT rbt;
+	IntervalTree IntervalTree;
     Node* e = new Node();
     fstream fin;
     fin.open("./insert.txt");
@@ -192,10 +192,10 @@ int main()
     while(!fin.eof()) {
         Node* e = new Node();
         fin >> e->low >> e->high;
-        rbt.Insert(e);
+        IntervalTree.Insert(e);
     }
  
-	// rbt.InorderTreeWalk( rbt.GetRoot() );
+	// IntervalTree.InorderTreeWalk( IntervalTree.GetRoot() );
 	cout << endl;
  
 	bool bquit = true;
@@ -204,8 +204,8 @@ int main()
 	{
 		cout << "输入低端点和高端点: ";
 		cin >> temp.low >> temp.high;
-		Node* p = rbt.IntervalSearch(&temp);
-		if(p != rbt.GetNil() )
+		Node* p = IntervalTree.IntervalSearch(&temp);
+		if(p != IntervalTree.GetNil() )
 			cout << "[" << p->low  << ',' << p->high << "]" << endl;
 		else
 			cout << "无重叠区间" << endl;
