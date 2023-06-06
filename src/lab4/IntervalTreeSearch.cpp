@@ -165,7 +165,7 @@ void IntervalTree::InorderTreeWalk( Node* px )
 	if( px != pT_nil )
 	{
 		InorderTreeWalk( px->pLeft );
-		cout << px->low << "-" << px->color << '-' << px->max <<endl;
+		cout << px->low << " " << px->high << " " << px->color << endl;
 		InorderTreeWalk( px->pRight );
 	}
 }
@@ -194,12 +194,12 @@ int main()
         fin >> e->low >> e->high;
         IntervalTree.Insert(e);
     }
- 
-	// IntervalTree.InorderTreeWalk( IntervalTree.GetRoot() );
 	cout << endl;
  
 	bool bquit = true;
 	Node temp;
+	cout << "区间树中序遍历结果为：" << endl;
+	IntervalTree.InorderTreeWalk(IntervalTree.GetRoot());
 	while(bquit)
 	{
 		cout << "输入低端点和高端点: ";
