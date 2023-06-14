@@ -4,6 +4,7 @@
 #include<fstream>
 #include<utility>
 #include<cmath>
+#include<iomanip>
 
 using namespace std;
 
@@ -119,6 +120,6 @@ int main() {
     firstR(root, "", fout, sum);
     double bit = ceil(log2(size));
     double zip_rate = (double)(sum * 100.0 / bit / alpha);
-    cout << "压缩率为：" << zip_rate << "%" << endl;
+    cout << "压缩率为：" << setprecision(4) << zip_rate << "%" << endl;
     return 0;
 }

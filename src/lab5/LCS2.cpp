@@ -19,10 +19,10 @@ int main() {
         swap(str1, str2);
     }
 
-    vector<vector<int>> dp(3, vector<int>(len1 + 1, 0));
+    vector<vector<int>> dp(3, vector<int>(len1 + 1, 0)); //滚动数组思想
     int i = 0;
     while(i < len2) {
-        dp[1] = dp[2]; //模2
+        dp[1] = dp[2]; //TODO：模2
         for(int j = 1; j <=len1; ++j) {
             if(str1[j-1] == str2[i]) {
                 dp[2][j] = dp[1][j-1] + 1;
