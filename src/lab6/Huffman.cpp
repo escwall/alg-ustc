@@ -8,10 +8,10 @@
 
 using namespace std;
 
-using Node = struct Node {
-    char c;
-    int cnt;
-    string code;
+using Node = struct Node { //哈夫曼树结点数据结构
+    char c; //字符
+    int cnt; //出现频数
+    string code; //哈夫曼编码
     Node* left;
     Node* right;
 
@@ -19,13 +19,12 @@ using Node = struct Node {
     c(_c), cnt(_cnt), code(_code), left(_left), right(_right) {
 
     }
-    Node() : c(' '), cnt(0), left(nullptr), right(nullptr) {}
-    // friend bool operator < (const Node& n1, const Node n2) {
-    //     return n1.cnt > n2.cnt;
-    // }
+    Node() : c(' '), cnt(0), left(nullptr), right(nullptr) {
+
+    }
 };
 
-struct myCompare
+struct myCompare //构造小顶堆的比较辅助函数
 {
     bool operator () (Node* n1, Node* n2) {
         return n1->cnt > n2->cnt;
@@ -33,18 +32,18 @@ struct myCompare
 };
 
 
-void insert_char(unordered_map<char,int>& dict, char c) {
+void insert_char(unordered_map<char,int>& dict, char c) { //向字符哈希表dict中插入字符c
     if(c == ' ' || c == '\n') return;
     auto it = dict.find(c);
-    if(it == dict.end()) {
+    if(it == dict.end()) { //哈希表dict中未出现过c
         dict.insert(pair<char,int>(c, 1));
     }
-    else {
+    else { //哈希表dict中出现过c，频数加一
         it->second++;
     }
 }
 
-unordered_map<char,int> create_dict(const string& path) {
+unordered_map<char,int> create_dict(const string& path) { //为数据源创建字符哈希表dict
     ifstream fin;
     fin.open(path);
     unordered_map<char,int> dict;
@@ -56,27 +55,26 @@ unordered_map<char,int> create_dict(const string& path) {
     return dict;
 }
 
-Node* merge_node(Node* n1, Node* n2) {
+Node* merge_node(Node* n1, Node* n2) { //将两个哈夫曼树结点合并
     Node* root = new Node(' ', n1->cnt+n2->cnt, "", n1, n2);
     return root;
 }
 
-Node* create_HuffmanTree(priority_queue<Node*, vector<Node*>, myCompare > min_q, int size) {
+Node* create_HuffmanTree(priority_queue<Node*, vector<Node*>, myCompare > min_q, int size) { //构建哈夫曼树
     Node* root = nullptr;
-    while(min_q.size() > 1) {
+    while(min_q.size() > 1) { //循环直至小顶堆中只剩根结点
         Node* min1, *min2;
-        min1 = min_q.top();
+        min1 = min_q.top(); //获取当前哈希表中频数最小的结点
         min_q.pop();
-        min2 = min_q.top();
+        min2 = min_q.top(); //获取哈希表中频数第二小的结点
         min_q.pop();
-        // cout << min1->c << ":" << min1->cnt << ", " << min2->c << ":" << min2->cnt << endl;
-        root = merge_node(min1, min2);
+        root = merge_node(min1, min2); //合并最小以及第二小的结点，将合并后的父结点添加到小顶堆中
         min_q.push(root);
     }
     return root;
 }
 
-void firstR(Node* root, string code, ofstream& fout, int& sum) {
+void firstR(Node* root, string code, ofstream& fout, int& sum) { //先序遍历并为每个结点构建哈夫曼编码
     if(!root) return;
     
     if(root->c != ' ') {
@@ -88,7 +86,7 @@ void firstR(Node* root, string code, ofstream& fout, int& sum) {
     firstR(root->right, code + "1", fout, sum);
 }
 
-double log2(int n) {
+double log2(int n) { //以2为底求对数
     double a = 2;
     return log(n)/log(a);
 }
@@ -96,30 +94,22 @@ double log2(int n) {
 int main() {
     string data_path = "./orignal.txt";
     string save_path = "./table.txt";
-    auto dict = create_dict(data_path);
+    auto dict = create_dict(data_path); //创建字符哈希表
     int alpha = 0;
-    // cout << dict.size() << endl;
-    priority_queue<Node*, vector<Node*>, myCompare > min_q;
+    priority_queue<Node*, vector<Node*>, myCompare > min_q; //小顶堆
     for(auto it = dict.begin(); it != dict.end(); it++) {
-        // cout << it->first <<": " << it->second << endl; 
-        alpha += it->second;
+        alpha += it->second; //统计字符总频数
         min_q.push(new Node(it->first, it->second, "", nullptr, nullptr));
     }
-    // while (!min_q.empty())
-    // {
-    //     auto e = min_q.top();
-    //     cout << e->c << " " << e->cnt << endl;
-    //     min_q.pop();
-    // }
     
-    Node* root = create_HuffmanTree(min_q, min_q.size());
+    Node* root = create_HuffmanTree(min_q, min_q.size()); //构建哈夫曼树
     ofstream fout;
     fout.open(save_path);
     int sum = 0;
     int size = min_q.size();
     firstR(root, "", fout, sum);
     double bit = ceil(log2(size));
-    double zip_rate = (double)(sum * 100.0 / bit / alpha);
+    double zip_rate = (double)(sum * 100.0 / bit / alpha); //计算压缩率
     cout << "压缩率为：" << setprecision(4) << zip_rate << "%" << endl;
     return 0;
 }
