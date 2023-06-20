@@ -1,2 +1,3 @@
 *.exe
 .vscode/
+src/lab8/twitter_large.txt
