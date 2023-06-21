@@ -7,18 +7,6 @@
 
 using namespace std;
 
-
-using vertex = struct vertex {
-    char label;
-    bool is_visited;
-    vertex(char c) : label(c), is_visited(false) {}
-};
-
-using edge = struct edge {
-    int val;
-    
-};
-
 int main() {
     ifstream fin;
     fin.open("./data.txt");
